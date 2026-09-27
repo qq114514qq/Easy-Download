@@ -1,0 +1,127 @@
+<Window x:Class="EasyDownload.Views.FirstRunWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="欢迎使用 EasyDownload"
+        Width="700" Height="480"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+
+    <Border CornerRadius="12"
+            Background="{DynamicResource AppBackgroundBrush}"
+            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- 标题栏 -->
+            <Border Grid.Row="0" Background="{DynamicResource NavBrush}"
+                    CornerRadius="12,12,0,0" MouseLeftButtonDown="TitleBar_Down">
+                <TextBlock Text="欢迎使用 EasyDownload" FontSize="14" FontWeight="SemiBold"
+                           VerticalAlignment="Center" Margin="16,0,0,0" />
+            </Border>
+
+            <!-- 第 1 步：欢迎 -->
+            <StackPanel x:Name="Step0" Grid.Row="1" Margin="32" VerticalAlignment="Center">
+                <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="48"
+                           Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" />
+                <TextBlock Text="欢迎使用 EasyDownload" FontSize="26" FontWeight="SemiBold"
+                           HorizontalAlignment="Center" Margin="0,16,0,8" />
+                <TextBlock Text="一个简洁、快速的多线程下载器，内置网页浏览。"
+                           FontSize="14" HorizontalAlignment="Center"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+                <StackPanel Margin="0,24,0,0" HorizontalAlignment="Center">
+                    <TextBlock Text="✔ 最高 32 线程加速下载" FontSize="14" Margin="0,3" />
+                    <TextBlock Text="✔ 断点续传，随时暂停继续" FontSize="14" Margin="0,3" />
+                    <TextBlock Text="✔ 多标签网页浏览（Edge 内核）" FontSize="14" Margin="0,3" />
+                    <TextBlock Text="✔ 浅色 / 深色主题自由切换" FontSize="14" Margin="0,3" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- 第 2 步：外观 -->
+            <StackPanel x:Name="Step1" Grid.Row="1" Margin="32" Visibility="Collapsed">
+                <TextBlock Text="选择外观" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,4" />
+                <TextBlock Text="随时可以在设置里更改" FontSize="13" Margin="0,0,0,20"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="ThemeLight" Width="200" Height="130" Click="ThemeLight_Click">
+                        <StackPanel>
+                            <TextBlock Text="&#xE706;" FontFamily="Segoe MDL2 Assets" FontSize="32" HorizontalAlignment="Center" />
+                            <TextBlock Text="浅色" FontSize="16" HorizontalAlignment="Center" Margin="0,10,0,0" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="ThemeDark" Width="200" Height="130" Margin="16,0,0,0" Click="ThemeDark_Click">
+                        <StackPanel>
+                            <TextBlock Text="&#xE708;" FontFamily="Segoe MDL2 Assets" FontSize="32" HorizontalAlignment="Center" />
+                            <TextBlock Text="深色" FontSize="16" HorizontalAlignment="Center" Margin="0,10,0,0" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- 第 3 步：下载设置 -->
+            <StackPanel x:Name="Step2" Grid.Row="1" Margin="32" Visibility="Collapsed">
+                <TextBlock Text="下载设置" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,4" />
+                <TextBlock Text="这些也都能在设置里随时调整" FontSize="13" Margin="0,0,0,20"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+
+                <TextBlock Text="最大线程数" FontSize="14" />
+                <Grid Margin="0,6,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="FThread" Grid.Column="0" Minimum="1" Maximum="32"
+                            TickFrequency="1" IsSnapToTickEnabled="True" Value="32"
+                            ValueChanged="FThread_Changed" />
+                    <TextBlock x:Name="FThreadText" Grid.Column="1" Text="32" Margin="12,0,0,0" />
+                </Grid>
+
+                <TextBlock Text="同时下载的文件数" FontSize="14" />
+                <Grid Margin="0,6,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="FConcurrent" Grid.Column="0" Minimum="1" Maximum="8"
+                            TickFrequency="1" IsSnapToTickEnabled="True" Value="4"
+                            ValueChanged="FConcurrent_Changed" />
+                    <TextBlock x:Name="FConcurrentText" Grid.Column="1" Text="4" Margin="12,0,0,0" />
+                </Grid>
+
+                <TextBlock Text="下载目录" FontSize="14" />
+                <TextBox x:Name="FFolder" Margin="0,6,0,0" />
+            </StackPanel>
+
+            <!-- 第 4 步：完成 -->
+            <StackPanel x:Name="Step3" Grid.Row="1" Margin="32" VerticalAlignment="Center" Visibility="Collapsed">
+                <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="48"
+                           Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" />
+                <TextBlock Text="一切就绪" FontSize="26" FontWeight="SemiBold"
+                           HorizontalAlignment="Center" Margin="0,16,0,8" />
+                <TextBlock Text="点击「开始使用」，开启你的下载体验。"
+                           FontSize="14" HorizontalAlignment="Center"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+            </StackPanel>
+
+            <!-- 底部按钮 -->
+            <Border Grid.Row="2" Background="{DynamicResource NavBrush}" Padding="16" CornerRadius="0,0,12,12">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock x:Name="StepText" Text="第 1 / 4 步" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="PrevBtn" Content="上一步" Click="Prev_Click" IsEnabled="False" />
+                        <Button x:Name="NextBtn" Content="下一步" Style="{StaticResource AccentButton}"
+                                Margin="8,0,0,0" Click="Next_Click" />
+                        <Button x:Name="FinishBtn" Content="开始使用" Style="{StaticResource AccentButton}"
+                                Margin="8,0,0,0" Visibility="Collapsed" Click="Finish_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

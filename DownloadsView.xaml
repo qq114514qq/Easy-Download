@@ -1,0 +1,136 @@
+<UserControl x:Class="EasyDownload.Views.DownloadsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{DynamicResource AppBackgroundBrush}">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="下载列表" FontSize="22" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+        <!-- 新建下载 -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,0,0,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="UrlBox" Grid.Column="0" />
+                <Button Grid.Column="1" Content="新建下载" Style="{StaticResource AccentButton}"
+                        Margin="8,0,0,0" Click="New_Click" />
+                <Button Grid.Column="2" Content="清空已完成" Margin="8,0,0,0" Click="Clear_Click" />
+            </Grid>
+        </Border>
+
+        <!-- 列表：关掉横向滚动，内容宽度锁死在可视范围内，任何长文件名都不会把进度条和按钮挤出去 -->
+        <ListBox x:Name="List" Grid.Row="2"
+                 HorizontalContentAlignment="Stretch"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 BorderThickness="0"
+                 Background="Transparent">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="0,0,0,10" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Focusable" Value="False" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Style="{StaticResource Card}" HorizontalAlignment="Stretch">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- 第 1 行：文件名（超长自动省略，鼠标悬停看全名） + 状态 -->
+                            <TextBlock Grid.Row="0" Grid.Column="0"
+                                       Text="{Binding FileName}"
+                                       FontSize="15" FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap"
+                                       VerticalAlignment="Center"
+                                       ToolTip="{Binding FileName}" />
+
+                            <TextBlock Grid.Row="0" Grid.Column="1"
+                                       Text="{Binding Status}"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       FontSize="13"
+                                       Margin="12,0,0,0"
+                                       VerticalAlignment="Center" />
+
+                            <!-- 第 2 行：网址（超长省略，悬停看完整地址） -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                       Text="{Binding Url}"
+                                       FontSize="12" Margin="0,3,0,8"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap"
+                                       ToolTip="{Binding Url}" />
+
+                            <!-- 第 3 行：进度条 + 百分比（百分比固定宽度，不参与挤压） -->
+                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ProgressBar Grid.Column="0"
+                                             Value="{Binding Progress}" Maximum="100"
+                                             IsIndeterminate="{Binding IsIndeterminate}"
+                                             VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding PercentText}"
+                                           FontSize="13" FontWeight="SemiBold"
+                                           MinWidth="52"
+                                           TextAlignment="Right"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+
+                            <!-- 第 4 行：左边是数据（自动省略），右边是按钮（固定不动） -->
+                            <TextBlock Grid.Row="3" Grid.Column="0"
+                                       Margin="0,8,12,0"
+                                       VerticalAlignment="Center"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap">
+                                <Run Text="{Binding SizeText, Mode=OneWay}" />
+                                <Run Text="   " />
+                                <Run Text="{Binding SpeedText, Mode=OneWay}" />
+                                <Run Text="   " />
+                                <Run Text="{Binding EtaText, Mode=OneWay}" />
+                            </TextBlock>
+
+                            <StackPanel Grid.Row="3" Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Margin="0,8,0,0"
+                                        VerticalAlignment="Center">
+                                <Button Content="开始" Padding="10,5" FontSize="12" Click="Start_Click" />
+                                <Button Content="暂停" Padding="10,5" FontSize="12" Margin="6,0,0,0" Click="Pause_Click" />
+                                <Button Content="打开" Padding="10,5" FontSize="12" Margin="6,0,0,0" Click="Open_Click" />
+                                <Button Content="删除" Padding="10,5" FontSize="12" Margin="6,0,0,0" Click="Delete_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>
